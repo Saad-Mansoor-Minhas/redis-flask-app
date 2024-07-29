@@ -1,0 +1,22 @@
+- hosts: remote
+  become: true
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Install Docker Compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m`
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+
+    - name: Copy redis-flask folder to remote host
+      synchronize:
+        src: "/home/saad/redis-flask/app-folder/"
+        dest: "/home/{{ ansible_user }}/app-folder"
+        recursive: yes
+
+    - name: Build Docker image
+      command: docker-compose up -d --build  /home/{{ ansible_user }}/app-folder
