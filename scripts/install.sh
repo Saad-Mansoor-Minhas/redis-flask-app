@@ -7,4 +7,4 @@ minikube start
 kubectl apply -f ../k8s/redis-deployment.yaml
 
 # Apply Flask Deployment
-kubectl apply -f ../k8s/deployment.yaml
+kubectl apply -f ../k8s/flask-deployment.yaml
