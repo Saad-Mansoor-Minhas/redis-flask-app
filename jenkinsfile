@@ -1,42 +1,51 @@
 pipeline {
     agent any
+
     environment {
-        IMAGE_NAME = 'flask-redis-app'
+        DOCKER_CLI = 'docker'
+        DOCKER_REGISTRY = 'your-registry'
     }
+
     stages {
-        stage('Clone Repository') {
+        stage('Checkout SCM') {
             steps {
-                git 'https://github.com/Saad-Mansoor-Minhas/redis-flask-app'
+                checkout scm
             }
         }
+
+        stage('Clone Repository') {
+            steps {
+                git url: 'https://github.com/Saad-Mansoor-Minhas/redis-flask-app'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Configure Docker to use Minikube's Docker daemon
-                    sh 'eval $(minikube docker-env)'  
-                    // Build Docker image
-                    docker.build("${IMAGE_NAME}")
+                    sh 'eval $(minikube -p minikube docker-env)'
+                    sh 'docker build -t redis-flask-app .'
                 }
             }
         }
+
         stage('Push Docker Image') {
             steps {
                 script {
-                    // Tag Docker image
-                    sh "docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:latest"
+                    sh 'docker tag redis-flask-app:latest $DOCKER_REGISTRY/redis-flask-app:latest'
+                    sh 'docker push $DOCKER_REGISTRY/redis-flask-app:latest'
                 }
             }
         }
+
         stage('Deploy to Minikube') {
             steps {
                 script {
-		    sh 'chmod +x scripts/install.sh'
-                    // Apply Kubernetes manifests
-                    sh 'scripts/install.sh'
+                    sh 'kubectl apply -f deployment.yaml'
                 }
             }
         }
     }
+
     post {
         always {
             cleanWs()
