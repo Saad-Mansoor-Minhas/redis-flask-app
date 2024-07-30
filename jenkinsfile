@@ -4,7 +4,7 @@ pipeline {
         DOCKER_IMAGE = "flask-app:latest"
         REDIS_HOST = credentials('REDIS_HOST')
         REDIS_PORT = credentials('REDIS_PORT')
-        FLASK_APP_PORT = credentials('FLASK_APP_PORT')
+        FLASK_APP_PORT = credentials('FLASK_PORT')
     }
     stages {
         stage('Checkout') {
