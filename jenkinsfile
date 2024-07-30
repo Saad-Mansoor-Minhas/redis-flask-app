@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_CLI = 'docker'
-        DOCKER_REGISTRY = 'your-registry'
+        DOCKER_REGISTRY = 'saadr8840'
     }
 
     stages {
@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     // Set Minikube Docker environment
-                    sh 'eval $(minikube -p minikube docker-env)'
+                    sh 'scripts/set_minikube_env.sh'
 
                     // Verify Docker environment
                     sh 'docker info'
@@ -47,8 +47,10 @@ pipeline {
         stage('Deploy to Minikube') {
             steps {
                 script {
+                    
+                    sh 'chmod +x scripts/install.sh'
                     // Apply Kubernetes deployment
-                    sh 'kubectl apply -f deployment.yaml'
+                    sh 'scripts/install.sh'
                 }
             }
         }
