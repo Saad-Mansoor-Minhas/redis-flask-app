@@ -13,8 +13,7 @@ pipeline {
             steps {
                 script {
                     // Configure Docker to use Minikube's Docker daemon
-                    sh 'eval $(minikube docker-env)'
-                    
+                    sh 'eval $(minikube docker-env)'  
                     // Build Docker image
                     docker.build("${IMAGE_NAME}")
                 }
