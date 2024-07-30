@@ -22,7 +22,13 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
+                    // Set Minikube Docker environment
                     sh 'eval $(minikube -p minikube docker-env)'
+
+                    // Verify Docker environment
+                    sh 'docker info'
+
+                    // Build Docker image
                     sh 'docker build -t redis-flask-app .'
                 }
             }
@@ -31,6 +37,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
+                    // Tag and push Docker image
                     sh 'docker tag redis-flask-app:latest $DOCKER_REGISTRY/redis-flask-app:latest'
                     sh 'docker push $DOCKER_REGISTRY/redis-flask-app:latest'
                 }
@@ -40,6 +47,7 @@ pipeline {
         stage('Deploy to Minikube') {
             steps {
                 script {
+                    // Apply Kubernetes deployment
                     sh 'kubectl apply -f deployment.yaml'
                 }
             }
