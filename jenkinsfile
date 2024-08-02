@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE = "flask-app:latest"
+        DOCKER_IMAGE = "flask-redis-app:latest"
         REDIS_HOST = credentials('REDIS_HOST')
         REDIS_PORT = credentials('REDIS_PORT')
         FLASK_APP_PORT = credentials('FLASK_PORT')
